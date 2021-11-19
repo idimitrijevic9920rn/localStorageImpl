@@ -16,7 +16,7 @@ public class DownloadImpl {
         String target = ToolManager.getInstance().getDownloads();
         String dir = ToolManager.getInstance().getDirectory();
         File f = new File(ToolManager.getInstance().getDirectory() + "/" + file);
-        File location = new File(ToolManager.getInstance().getDownloads() + "/" + parts[parts.length - 1]);
+        File location = new File(ToolManager.getInstance().getDownloads() + "/" + f.getName());
         try {
             Files.copy(f.toPath(), location.toPath(), StandardCopyOption.REPLACE_EXISTING);
             System.out.println("file downloaded succefully");

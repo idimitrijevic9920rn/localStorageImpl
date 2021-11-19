@@ -11,26 +11,48 @@ public class MoveImpl {
     public MoveImpl() {
     }
 
-
     public void moveFile(String file, String target) throws IOException {
-        String[] parts = file.split("/");
-        String dir = ToolManager.getInstance().getDirectory();
-        if(target.equals("directory")) {
-            target = dir + parts[parts.length-1];
-        }
-        else
-            target = dir + "/" + target + "/" + parts[parts.length - 1];
-        String f1 = dir + file;
-        File f = new File(f1);
-        File location = new File(target);
-        try {
-            Files.copy(f.toPath(),location.toPath(),StandardCopyOption.REPLACE_EXISTING);
-            ToolManager.getInstance().getDelete().deleteFile(file,dir);
-            System.out.println("file copied succefully");
-        }catch (NoSuchFileException e){
-            System.out.println("file does not exists");
+        boolean exists = exists(file,target);
 
+        File f = new File(ToolManager.getInstance().getDirectory() + "/" + file);
+        File dir = new File( ToolManager.getInstance().getDirectory());
+        if(exists==false){
+            if(target.equals(dir.getName())) {
+                target = dir.getAbsolutePath() + "/" + f.getName();
+            }
+            else
+                target = dir.getAbsolutePath() + "/" + target + "/" + f.getName();
+            File location = new File(target);
+            try {
+                Files.copy(f.toPath(),location.toPath(),StandardCopyOption.REPLACE_EXISTING);
+                ToolManager.getInstance().getDelete().deleteFile(file);
+                System.out.println("file copied succefully");
+            }catch (NoSuchFileException e){
+                System.out.println("file does not exists");
+            }
+        }else
+            System.out.println("file " + file + " in " + target + " alredy exists");
+
+
+    }
+
+    private boolean exists(String fileName, String target){
+        File dir = new File(ToolManager.getInstance().getDirectory());
+        File file = new File(ToolManager.getInstance().getDirectory() + "/" + fileName);
+        int flag = 0;
+        File targ;
+        if(target.equals(dir.getName())){
+            targ = dir;
+        }else{
+            targ = new File(ToolManager.getInstance().getDirectory() + "/" + target);
         }
+
+        for(File ff:targ.listFiles()){
+            if(ff.getName().equals(file.getName())){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

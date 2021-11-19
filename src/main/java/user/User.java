@@ -10,16 +10,26 @@ public class User {
     private String username;
     private String password;
     private List<Role> roles = new ArrayList<>();
-    private String mail;
+    private List<String> folders;
 
-    public User(String username, String password, List<Role> roles) {
+    public User(String username, String password, List<Role> roles, List<String> folders) {
         this.username = username;
         this.password = password;
         this.roles = roles;
+        this.folders = folders;
     }
+
 
     public User(){
 
+    }
+
+    public List<String> getFolders() {
+        return folders;
+    }
+
+    public void setFolders(List<String> folders) {
+        this.folders = folders;
     }
 
     public String getUsername() {
@@ -40,14 +50,6 @@ public class User {
 
     public List<Role> getRoles() {
         return roles;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
     }
 
     public void setRoles(List<Role> roles) {

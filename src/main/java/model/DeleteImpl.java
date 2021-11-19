@@ -16,19 +16,25 @@ public class DeleteImpl {
     }
 
 
-    public void deleteFile(String str,String dir){
+    public void deleteFile(String str){
+        String dir = ToolManager.getInstance().getDirectory();
         String directory = ToolManager.getInstance().getDirectory().substring(0, ToolManager.getInstance().getDirectory().length()-1);
-        if(str.equals("directory")) {
+        String json = ToolManager.getInstance().getDirectory() + "/" + "user.json";
+        File file = new File(dir + "/" + str);
+        if(str.equals(dir)) {
             str = "";
+            file = new File(dir);
         }
-        File file = new File(dir + str);
         try {
             Files.walk(file.toPath()).sorted(Comparator.reverseOrder()).forEach(path -> {
                         try {
-                            if(path.toString().equals(directory))
+                            if(path.toString().equals(json))
+                                System.out.println("user.json can not be deleted");
+                            else if(path.toString().equals(directory))
                                 System.out.println("directory can not be deleted");
                             else
                                 Files.delete(path);
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -40,16 +46,19 @@ public class DeleteImpl {
     }
 
     public void deleteAll(String str){
-        String dir = ToolManager.getInstance().getDirectory().substring(0, ToolManager.getInstance().getDirectory().length()-1);
-        int flag = 0;
-        if(str.equals("directory")) {
-            str = "";
+        File dir = new File(ToolManager.getInstance().getDirectory());
+        String pathh = ToolManager.getInstance().getDirectory() + "/" + str;
+        if(str.equals(dir.getName().toString())){
+            pathh = ToolManager.getInstance().getDirectory();
         }
-        File file = new File(ToolManager.getInstance().getDirectory() + "/" + str);
+        File file = new File(pathh);
         try {
             Files.walk(file.toPath()).sorted(Comparator.reverseOrder()).forEach(path -> {
                 try {
-                    if(!path.toString().equals(file.getPath()))
+                    File toDelete = new File(path.toString());
+                    if(toDelete.getName().equals("user.json"))
+                        System.out.println("user.json can not be deleted");
+                    else if(!path.toString().equals(file.getPath()))
                         Files.delete(path);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -61,21 +70,29 @@ public class DeleteImpl {
 
     }
 
-    public void deleteFiles(String str,String dir){
+    public void deleteFiles(String str){
         String[] list = str.split(",");
         ArrayList<String> arr = new ArrayList<>();
         for(String f:list){
-            arr.add(f);
+            arr.add(ToolManager.getInstance().getDirectory() + "/" + f);
         }
-        File file = new File(dir);
+        File file = new File(ToolManager.getInstance().getDirectory());
         File[] files = file.listFiles();
+        int count = files.length;
 
-        for(File f:files){
-            if(arr.contains(f.getName())){
-                f.delete();
+
+        for (int i = 0; i < count; i++) {
+            if(arr.contains(files[i].toString())) {
+                if (files[i].isFile()) {
+                    files[i].delete();
+                } else {
+                    String[] parts = files[i].toString().split("/");
+                    deleteAll(parts[parts.length - 1]);
+                    files[i].delete();
+
+                }
             }
         }
-
 
     }
 

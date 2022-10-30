@@ -1,141 +1,195 @@
 package model;
 
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
-import java.sql.Time;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
+
 
 public class ListFiles {
 
     public ListFiles() {
     }
 
-    public void listTxtFilesFromDirectory(String str){
-        if(str.equals("directory")){
-            str = "";
-        }
+    public List<File> listTxtFilesFromDirectory(String str){
+
+       List<File> files = new ArrayList<>();
+
         File file = new File(ToolManager.getInstance().getDirectory() + "/" + str);
         for(File f:file.listFiles()){
-            int sz = f.getName().length();
-            String parts = String.valueOf(f.getName().toString().charAt(sz-1)) + String.valueOf(f.getName().toString().charAt(sz-2)) + String.valueOf(f.getName().toString().charAt(sz-3));
-            if(parts.equals("txt") && f.isFile()){
-                System.out.println(f.getName());
-            }
-        }
-    }
+            String extension = "";
 
-    public void listAllTxtFilesFromDirectoryAndSubdirectories(String str){
-        if(str.equals("directory")){
-            str = "";
-        }
-        File f = new File(ToolManager.getInstance().getDirectory() + "/" + str);
-        try {
-            Files.walk(f.toPath()).sorted(Comparator.reverseOrder()).forEach(path -> {
-                    String[] parts = path.toString().split("/");
-                    String part = parts[parts.length - 1];
-                    int sz = part.length();
-                    if(sz>2) {
-                        String txt = String.valueOf(part.charAt(sz - 1)) + String.valueOf(part.charAt(sz-2)) + String.valueOf(part.charAt(sz-3));
-                        if (txt.equals("txt"))
-                            System.out.println(part);
-                    }
-            });
-        }catch (IOException e){
-            System.out.println("folder not found");
-        }
-    }
-
-    public void listAllFoldersFromDirectoryAndSubdirectories(String str){
-        if(str.equals("directory")){
-            str = "";
-        }
-        File f = new File(ToolManager.getInstance().getDirectory() + "/" + str);
-        try {
-            Files.walk(f.toPath()).sorted(Comparator.reverseOrder()).forEach(path -> {
-                File file = new File(path.toString());
-                if(file.isDirectory()){
-                    String[] parts = path.toString().split("/");
-                    System.out.println(parts[parts.length - 1]);
+            int i = f.getName().lastIndexOf('.');
+            if (i > 0) {
+                extension = f.getName().substring(i+1);
+                if(extension.equals("txt")){
+                    files.add(f);
                 }
-            });
-        }catch (IOException e){
-            System.out.println("folder not found");
-        }
-    }
-
-    public void listAllFoldersFromDirectory(String str){
-        if(str.equals("directory")){
-            str = "";
-        }
-        File file = new File(ToolManager.getInstance().getDirectory() + "/" + str);
-        for(File f:file.listFiles()){
-            if(f.isDirectory()){
-                String[] parts = f.toPath().toString().split("/");
-                System.out.println(parts[parts.length - 1]);
             }
         }
+
+        ToolManager.getInstance().setCurrentFileList(files);
+
+        return files;
     }
 
-    public void listSortedFiles(String str){
-        if(str.equals("directory")){
-            str = "";
-        }
+    public List<File> listAllFilesFromDirectoryAndSubdirectories(String str){
+
+        List<File> files = new ArrayList<>();
+
         File f = new File(ToolManager.getInstance().getDirectory() + "/" + str);
-        ArrayList<File> files = new ArrayList<>();
+
         try {
             Files.walk(f.toPath()).sorted(Comparator.reverseOrder()).forEach(path -> {
                 File file = new File(path.toString());
-                if(file.isFile() && !file.getName().equals(".DS_Store")){
+                if(file.isFile()){
                     files.add(file);
                 }
             });
-            Collections.sort(files);
-            for(File ff:files){
-                System.out.println(ff.getName());
-            }
         }catch (IOException e){
             System.out.println("folder not found");
         }
+
+        ToolManager.getInstance().setCurrentFileList(files);
+
+        return files;
     }
 
-    public void listSortedFolders(String str){
-        if(str.equals("directory")){
-            str = "";
-        }
-        File f = new File(ToolManager.getInstance().getDirectory() + "/" + str);
-        ArrayList<String> files = new ArrayList<>();
+    public List<File> listAllFilesWithExtension(String ext){
+        List<File> files = new ArrayList<>();
+
+        File root = new File(ToolManager.getInstance().getDirectory());
+
         try {
-            Files.walk(f.toPath()).sorted(Comparator.reverseOrder()).forEach(path -> {
+            Files.walk(root.toPath()).sorted(Comparator.reverseOrder()).forEach(path -> {
                 File file = new File(path.toString());
-                if(file.isDirectory() && !file.getName().equals(".DS_Store")){
-                    files.add(file.getName());
+                String extension = "";
+
+                int i = file.getName().lastIndexOf('.');
+                if (i > 0) {
+                    extension = file.getName().substring(i+1);
+                    if(extension.equals(ext)){
+                        files.add(file);
+                    }
                 }
             });
-            Collections.sort(files);
-            for(String ff:files){
-                System.out.println(ff);
-            }
         }catch (IOException e){
             System.out.println("folder not found");
         }
+
+        ToolManager.getInstance().setCurrentFileList(files);
+
+        return files;
+
     }
 
-    public void listFilesByDateCreated(String str){
-        if(str.equals("directory")){
-            str = "";
+    public List<File> listAllFilesWithSubstring(String sub){
+
+        List<File> files = new ArrayList<>();
+
+        File root = new File(ToolManager.getInstance().getDirectory());
+
+        try {
+            Files.walk(root.toPath()).sorted(Comparator.reverseOrder()).forEach(path -> {
+                File file = new File(path.toString());
+
+                if(file.isFile() && file.getName().contains(sub)){
+                    files.add(file);
+                }
+            });
+        }catch (IOException e){
+            System.out.println("folder not found");
         }
-        File f = new File(ToolManager.getInstance().getDirectory() + "/" + str);
-        File[] files = f.listFiles();
+
+        ToolManager.getInstance().setCurrentFileList(files);
+
+        return files;
+
+    }
+
+    public List<File> getFileFolder(String fileName){
+
+        List<File> files = new ArrayList<>();
+
+        File root = new File(ToolManager.getInstance().getDirectory());
+
+        try {
+            Files.walk(root.toPath()).sorted(Comparator.reverseOrder()).forEach(path -> {
+                File file = new File(path.toString());
+
+                if(file.isFile() && file.getName().equals(fileName)){
+                   files.add(file.getParentFile());
+                }
+            });
+        }catch (IOException e){
+            System.out.println("folder not found");
+        }
+
+        ToolManager.getInstance().setCurrentFileList(files);
+
+        return files;
+    }
+
+    public List<File> getSortedFiles(String value, String param){
+
+
+        File root = new File(ToolManager.getInstance().getDirectory());
+        List<File> files = new ArrayList<>();
+        int i = 0;
+
+        try {
+            Files.walk(root.toPath()).sorted(Comparator.reverseOrder()).forEach(path -> {
+                File file = new File(path.toString());
+                files.add(file);
+            });
+        }catch (IOException e){
+            System.out.println("folder not found");
+        }
+
+        File[] fileArray = new File[files.size()];
+
+        for(File f:files){
+            fileArray[i++] = f;
+        }
+
+
+        if(value.equals("modified")){
+            Arrays.sort(fileArray, Comparator.comparingLong(File::lastModified).reversed());
+            if(param.equals("desc")){
+                ToolManager.getInstance().setCurrentFileList(Arrays.asList(fileArray));
+                return Arrays.asList(fileArray);
+
+            }
+            if(param.equals("asc")){
+                Arrays.sort(fileArray, Comparator.comparingLong(File::lastModified).reversed());
+                ToolManager.getInstance().setCurrentFileList(Arrays.asList(fileArray));
+                return Arrays.asList(fileArray);
+            }
+        }
+
+        if(value.equals("created")){
+            if(param.equals("desc")) {
+                ToolManager.getInstance().setCurrentFileList(Arrays.asList(fileArray));
+                return Arrays.asList(this.sortByDateCreated(fileArray));
+            }
+            if(param.equals("asc")){
+                ToolManager.getInstance().setCurrentFileList(Arrays.asList(fileArray));
+                return Arrays.asList(this.reverseList(sortByDateCreated(fileArray)));
+            }
+        }
+
+        return null;
+
+    }
+
+    private File[] sortByDateCreated(File[] files){
+
         Comparator<File> comparator = Comparator.comparing(file -> {
             try {
                 return Files.readAttributes(Paths.get(file.toURI()), BasicFileAttributes.class).creationTime();
@@ -145,25 +199,54 @@ public class ListFiles {
         });
 
         Arrays.sort(files, comparator);
-        for(File ff:files){
-            if(!ff.getName().equals(".DS_Store") && ff.isFile())
-                System.out.println(ff.getName());
-        }
+
+        return files;
     }
 
-    public void listFilesByDateModified(String str){
-        if(str.equals("directory")){
-            str = "";
-        }
-        File f = new File(ToolManager.getInstance().getDirectory() + "/" + str);
-        File[] files = f.listFiles();
-        Arrays.sort(files, Comparator.comparingLong(File::lastModified));
-        for(File ff:files){
-            if(!ff.getName().equals(".DS_Store") && ff.isFile())
-                System.out.println(ff.getName());
+    private File[] reverseList(File[] files){
+
+            List<File> list = Arrays.asList(files);
+            Collections.reverse(list);
+            File[] reversedArray = list.toArray(files);
+            return reversedArray;
+    }
+
+    public List<File> getCreatedAndModifiedFiles(String dir, List<String> values) {
+
+        File root = new File(ToolManager.getInstance().getDirectory() + "/" + dir);
+        List<File> files = new ArrayList<>();
+        Date d1 = null;
+        Date d2 = null;
+
+        try {
+            d1 = new SimpleDateFormat("dd/MM/yyyy").parse(values.get(0));
+            d2 = new SimpleDateFormat("dd/MM/yyyy").parse(values.get(1));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
 
+        try {
+            Date finalD1 = d1;
+            Date finalD2 = d2;
+
+            Files.walk(root.toPath()).sorted(Comparator.reverseOrder()).forEach(path -> {
+                File file = new File(path.toString());
+
+                Date dateTime = new Date( file.lastModified());
+
+                if(file.isFile() && dateTime.after(finalD1) && dateTime.before(finalD2)){
+                   files.add(file);
+                }
+
+            });
+        }catch (IOException e){
+            System.out.println("folder not found");
+        }
+
+        ToolManager.getInstance().setCurrentFileList(files);
+        return files;
     }
+
 
 
 }

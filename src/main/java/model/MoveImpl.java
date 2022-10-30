@@ -25,7 +25,8 @@ public class MoveImpl {
             File location = new File(target);
             try {
                 Files.copy(f.toPath(),location.toPath(),StandardCopyOption.REPLACE_EXISTING);
-                ToolManager.getInstance().getDelete().deleteFile(file);
+                File ff = new File(ToolManager.getInstance().getDirectory() + "/" + file);
+                ToolManager.getInstance().getDelete().deleteFiles(ff);
                 System.out.println("file copied succefully");
             }catch (NoSuchFileException e){
                 System.out.println("file does not exists");

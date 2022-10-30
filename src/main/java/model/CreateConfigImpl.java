@@ -16,23 +16,17 @@ public class CreateConfigImpl {
     public CreateConfigImpl() {
     }
 
-    public void initialize(int maxSize, List<String> folders , List<Integer> numOfFiles, List<String> fileTypes){
-        if(!ToolManager.getInstance().getCurrentUser().equals(ToolManager.getInstance().getAdmin())){
-            System.out.println(ToolManager.getInstance().getCurrentUser());
-            System.out.println(ToolManager.getInstance().getAdmin());
-            System.out.println("user " + ToolManager.getInstance().getCurrentUser() + " does not have premission to create config file");
-            return;
-        }
+    public void initialize(List<String> folders , List<Integer> numOfFiles, List<String> fileTypes, List<Integer> folderSizes){
+
         ObjectMapper mapper = ToolManager.getInstance().getObjectMapper();
         File file = new File(ToolManager.getInstance().getDirectory() + "/" + "config.json");
+        System.out.printf(file.getAbsolutePath());
         try {
             file.createNewFile();
-            Config config = new Config(maxSize,folders,numOfFiles,fileTypes);
+            Config config = new Config(folders,numOfFiles,fileTypes, folderSizes);
             mapper.writeValue(file,config);
-            Config configs = ToolManager.getInstance().getObjectMapper().readValue(file, Config.class);
-            ToolManager.getInstance().setDependentFolders(folders);
-            ToolManager.getInstance().setDepedentFolderValues(numOfFiles);
-            ToolManager.getInstance().setForbiddenFileTypes(fileTypes);
+
+
             System.out.println("config file succesfully created");
         } catch (IOException e) {
             System.out.println("error");

@@ -11,18 +11,24 @@ public class CreateImpl {
     }
 
     public void makeFolder(String path){
+
         File file = new File(ToolManager.getInstance().getDirectory() + "/" + path);
-        file.mkdir();
-    }
 
-
-    public void makeFolders(String path) {
-        String[] arr = path.split(",");
-        for(String s:arr){
-            File file = new File(ToolManager.getInstance().getDirectory() + "/" + s);
-            file.mkdir();
+        File dir = new File(ToolManager.getInstance().getDirectory() + "/" + path.split("/" + file.getName())[0]);
+        if(dir.isDirectory()){
+            for (File listFile : dir.listFiles()) {
+                if(listFile.getName().equals(file.getName())){
+                    System.out.println("Folder " + file.getName() + " alredy exists");
+                    return;
+                }
+            }
         }
+
+        file.mkdir();
+        System.out.println("successfully created folder " + file.getName());
     }
+
+
 
     public void makeFile(String path){
         File file = new File(ToolManager.getInstance().getDirectory() + "/" + path);
@@ -54,12 +60,6 @@ public class CreateImpl {
         return false;
     }
 
-    private boolean checkUserFolderPremission(String files){
-
-
-
-        return false;
-    }
 
 
 }

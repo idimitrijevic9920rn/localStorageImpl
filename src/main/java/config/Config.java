@@ -6,28 +6,22 @@ import java.util.Map;
 
 public class Config {
 
-    private int maxFolderLength;
     private List<String> folders;
     private List<Integer> numOfFiles;
     private List<String> fileTypes;
 
-    public Config(int maxFolderLength, List<String> folders, List<Integer> numOfFiles, List<String> fileTypes) {
-        this.maxFolderLength = maxFolderLength;
+    private List<Integer> folderSizes;
+
+    public Config(List<String> folders, List<Integer> numOfFiles, List<String> fileTypes, List<Integer> folderSizes) {
         this.folders = folders;
         this.numOfFiles = numOfFiles;
         this.fileTypes = fileTypes;
+        this.folderSizes = folderSizes;
     }
 
     public Config() {
     }
 
-    public int getMaxFolderLength() {
-        return maxFolderLength;
-    }
-
-    public void setMaxFolderLength(int maxFolderLength) {
-        this.maxFolderLength = maxFolderLength;
-    }
 
     public List<String> getFolders() {
         return folders;
@@ -53,13 +47,21 @@ public class Config {
         this.fileTypes = fileTypes;
     }
 
+    public List<Integer> getFolderSizes() {
+        return folderSizes;
+    }
+
+    public void setFolderSizes(List<Integer> folderSizes) {
+        this.folderSizes = folderSizes;
+    }
+
     @Override
     public String toString() {
         return "Config{" +
-                "maxFolderLength=" + maxFolderLength +
                 ", folders=" + folders +
                 ", numOfFiles=" + numOfFiles +
                 ", fileTypes=" + fileTypes +
+                ", folderSizes=" + folderSizes +
                 '}';
     }
 }

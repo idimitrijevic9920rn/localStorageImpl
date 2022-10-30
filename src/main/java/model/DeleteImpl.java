@@ -1,12 +1,8 @@
 package model;
 
-import java.awt.*;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 
 
@@ -14,7 +10,6 @@ public class DeleteImpl {
 
     public DeleteImpl() {
     }
-
 
 
     public void deleteAll(String str){

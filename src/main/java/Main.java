@@ -1,6 +1,5 @@
 import model.ToolManager;
 import repository.RepositoryImp;
-import user.User;
 
 import java.io.File;
 import java.io.IOException;

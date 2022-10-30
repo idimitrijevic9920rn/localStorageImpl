@@ -1,12 +1,8 @@
 package model;
 
-import user.Role;
-import user.User;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 
 public class InitializeDirecory {
 

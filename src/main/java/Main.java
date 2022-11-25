@@ -16,6 +16,8 @@ public class Main {
         RepositoryImp repositoryImp = new RepositoryImp();
 
 
+
+
 //        repositoryImp.createStorage("folder1/ff3f,folder5/n3n",1);
 
 //          repositoryImp.createFile("folder3/dds.txt", 0);
@@ -24,10 +26,10 @@ public class Main {
 //        repositoryImp.createFile("folder1/nekifajl1.jpg",0);
 //        System.out.println(repositoryImp.viewFile( null,6, "ey.txt"));
 //
-//
-//        repositoryImp.createConfig(Arrays.asList("folder1","folder2"),Arrays.asList(1,2), Arrays.asList("exe"),Arrays.asList(1500,600));
-//
-//
+
+        repositoryImp.createConfig(Arrays.asList("folder1","folder2"),Arrays.asList(1,2), Arrays.asList("exe"),Arrays.asList(1500,600));
+
+
 //        System.out.println(ToolManager.getInstance().getDirectory());
 //
 //        System.out.println(ToolManager.getInstance().getDirectory());

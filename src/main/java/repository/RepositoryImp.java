@@ -5,6 +5,7 @@ import config.Config;
 import model.ToolManager;
 import org.apache.commons.io.FileUtils;
 import specification.ProjectSpecification;
+import specification.StorageManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +13,10 @@ import java.util.List;
 
 public class RepositoryImp implements ProjectSpecification {
 
+
+    static {
+        StorageManager.registerStorage(new RepositoryImp());
+    }
 
     @Override
     public void downloadFile(String path) {
@@ -32,30 +37,30 @@ public class RepositoryImp implements ProjectSpecification {
     public Object viewFile(Object path, int val, Object param) {
 
         switch (val) {
-            case 1:
+            case 0:
                 return ToolManager.getInstance().getListFiles().listTxtFilesFromDirectory(((String) path));
-            case 2:
+            case 1:
                 //vrati sve fajlove u zadatom direktorijumu i svim poddirektorijumima
                 return ToolManager.getInstance().getListFiles().listAllFilesFromDirectoryAndSubdirectories(((String) path));
-            case 3:
+            case 2:
                 //vrati fajlove sa određenom ekstenzijom
                 return ToolManager.getInstance().getListFiles().listAllFilesWithExtension(((String) param));
-            case 4:
+            case 3:
                 //vrati fajlove koji u svom imenu sadrže, počinju, ili se završavaju nekim
                 //zadatim podstringom
                 System.out.println(ToolManager.getInstance().getListFiles().listAllFilesWithSubstring(((String) param)));
                 return ToolManager.getInstance().getListFiles().listAllFilesWithSubstring(((String) param));
-            case 5:
+            case 4:
 //                vratiti da li određeni direktorijum sadrži fajl sa određenim imenom, ili više
 //                fajlova sa zadatom listom imena
                 return ToolManager.getInstance().getListFiles().listAllFilesWithExtension(((String) param));
-           case 6:
+           case 5:
 //              vratiti u kom folderu se nalazi fajl sa određenim zadatim imenom,
                 return String.valueOf(ToolManager.getInstance().getListFiles().getFileFolder(((String) param)));
-            case 7:
+            case 6:
                 //pretraga po datumu kreiranje ili modifikacije, rastuće ili opadajuće,
                 return ToolManager.getInstance().getListFiles().getSortedFiles(((String) path), ((String) param));
-            case 8:
+            case 7:
 //              vrati fajlove koji su kreirani/modifikovani u nekom periodu, u nekom
 //              direktorijumu,
                 return ToolManager.getInstance().getListFiles().getCreatedAndModifiedFiles((String)path, ((List<String>) param));
@@ -102,7 +107,10 @@ public class RepositoryImp implements ProjectSpecification {
     @Override
     public void createFile(String path,int val) {
 
+
+        System.out.println(path);
         if(val==0){
+
             File file = new File(ToolManager.getInstance().getDirectory() + "/" + path);
 
             if(!pathExists(path)){
@@ -140,8 +148,6 @@ public class RepositoryImp implements ProjectSpecification {
                     else System.out.println("folder " + file.getParentFile().getName() + " exceeds allowed value of the files");
             }
         }
-
-
 
     }
 

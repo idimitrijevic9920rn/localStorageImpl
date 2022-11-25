@@ -16,13 +16,14 @@ public class MoveImpl {
 
         File f = new File(ToolManager.getInstance().getDirectory() + "/" + file);
         File dir = new File( ToolManager.getInstance().getDirectory());
-        if(exists==false){
+        if(!exists){
             if(target.equals(dir.getName())) {
                 target = dir.getAbsolutePath() + "/" + f.getName();
             }
             else
                 target = dir.getAbsolutePath() + "/" + target + "/" + f.getName();
             File location = new File(target);
+            System.out.println(location + "location");
             try {
                 Files.copy(f.toPath(),location.toPath(),StandardCopyOption.REPLACE_EXISTING);
                 File ff = new File(ToolManager.getInstance().getDirectory() + "/" + file);

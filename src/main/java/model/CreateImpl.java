@@ -31,32 +31,19 @@ public class CreateImpl {
 
     public void makeFile(String path){
         File file = new File(ToolManager.getInstance().getDirectory() + "/" + path);
+
+        if(file.exists()){
+            System.out.println("file " + file.getName() + " alredy exist");
+            return;
+        }
+
         try {
-            file.createNewFile();
+            if(file.createNewFile()){
+                System.out.println("File " + file.getName() + " created");
+            }
         } catch (IOException e) {
             System.out.println("failded to create file");
         }
-    }
-
-    public void makeFiles(String path){
-        String[] arr = path.split(",");
-        for(String s:arr){
-            File file = new File(ToolManager.getInstance().getDirectory() + "/" + s);
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                System.out.println("failed to create file");
-            }
-
-        }
-    }
-
-    private boolean exeCheck(String path){
-        String chars = path.substring(path.length()-3);
-        if(chars.equals("exe")){
-            return true;
-        }
-        return false;
     }
 
 

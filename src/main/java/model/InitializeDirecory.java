@@ -12,14 +12,15 @@ public class InitializeDirecory {
 
     public void initialize(String path){
 
-        File dir = new File(ToolManager.getInstance().getDirectory() + "/" + path);
+        File dir = new File("/Users/ilija/Downloads/downloads" + "/" + path);
 
         if(!dir.exists()){
             dir.mkdir();
-            ToolManager.getInstance().setDirectory(path);
         }else{
-            System.out.println("this storage alredy exists");
+            System.out.println("main directory alredy exists");
         }
+
+        ToolManager.getInstance().setDirectory(dir.getPath());
 
     }
 

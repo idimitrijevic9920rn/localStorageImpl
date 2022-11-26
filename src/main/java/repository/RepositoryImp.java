@@ -36,6 +36,8 @@ public class RepositoryImp implements ProjectSpecification {
     @Override
     public Object viewFile(Object path, int val, Object param) {
 
+
+
         switch (val) {
             case 0:
                 return ToolManager.getInstance().getListFiles().listTxtFilesFromDirectory(((String) path));
@@ -53,7 +55,7 @@ public class RepositoryImp implements ProjectSpecification {
             case 4:
 //                vratiti da li određeni direktorijum sadrži fajl sa određenim imenom, ili više
 //                fajlova sa zadatom listom imena
-                return ToolManager.getInstance().getListFiles().listAllFilesWithExtension(((String) param));
+                return ToolManager.getInstance().getListFiles().checkIfFolderContains(((String) path), ((List<String>) param));
            case 5:
 //              vratiti u kom folderu se nalazi fajl sa određenim zadatim imenom,
                 return String.valueOf(ToolManager.getInstance().getListFiles().getFileFolder(((String) param)));
@@ -73,7 +75,6 @@ public class RepositoryImp implements ProjectSpecification {
 
     @Override
     public Object filterFiles(String param) {
-        System.out.println(ToolManager.getInstance().getFilterImpl().filterFiles(param));
         return ToolManager.getInstance().getFilterImpl().filterFiles(param);
     }
 
@@ -108,7 +109,6 @@ public class RepositoryImp implements ProjectSpecification {
     public void createFile(String path,int val) {
 
 
-        System.out.println(path);
         if(val==0){
 
             File file = new File(ToolManager.getInstance().getDirectory() + "/" + path);
@@ -138,14 +138,21 @@ public class RepositoryImp implements ProjectSpecification {
             String[] parts = path.split(",");
             for(String part:parts){
                 File file = new File(ToolManager.getInstance().getDirectory() + "/" + part);
-                    boolean folderlen = this.maxDirLen(file);
-                    if(folderlen){
-                        if(this.checkFileExtension(path))
+                boolean folderlen = this.maxDirLen(file);
+                if(folderlen){
+                    if(this.checkFileExtension(part)){
+                        if(this.checkFolderSize(part)) {
                             ToolManager.getInstance().getCreate().makeFile(part);
-                        else
-                            System.out.println("directory does not have premission for creating this file extension");
+                        }else{
+                            System.out.println("directory is full");
+                        }
                     }
-                    else System.out.println("folder " + file.getParentFile().getName() + " exceeds allowed value of the files");
+                    else
+                        System.out.println("directory does not have premission for creating this file extension");
+                }
+                else{
+                    System.out.println("folder " + file.getParentFile().getName() + " exceeds allowed value of the files");
+                }
             }
         }
 
@@ -168,6 +175,7 @@ public class RepositoryImp implements ProjectSpecification {
     @Override
     public void initialiseDirectory(String path) {
         ToolManager.getInstance().getInitializeDirecory().initialize(path);
+        System.out.println(ToolManager.getInstance().getDirectory());
     }
 
     @Override
@@ -193,34 +201,35 @@ public class RepositoryImp implements ProjectSpecification {
         File dir = new File(ToolManager.getInstance().getDirectory());
         boolean flag = false;
 
+
         ObjectMapper mapper = new ObjectMapper();
+
         for(File f:dir.listFiles()){
             if(f.getName().equals("congig.json")){
-                flag = true;
+                return false;
             }
         }
 
-        if(flag){
-            try {
-                File config = new File(dir + "/config.json");
-                Config configs = mapper.readValue(config, Config.class);
-                List<String> folders = configs.getFolders();
-                List<Integer> numOfFiles = configs.getNumOfFiles();
-                File chekck = file.getParentFile();
-                for(int i=0;i<folders.size();i++){
-                    if(folders.get(i).equals(chekck.getName())){
-                        if(chekck.listFiles().length <= numOfFiles.get(i)){
-                            System.out.println(chekck.listFiles().length +  "  " + numOfFiles.get(i));
-                            return true;
-                        }
-                        else return false;
+
+        try {
+            File config = new File(dir + "/config.json");
+            Config configs = mapper.readValue(config, Config.class);
+            List<String> folders = configs.getFolders();
+            List<Integer> numOfFiles = configs.getNumOfFiles();
+            File chekck = file.getParentFile();
+            for(int i=0;i<folders.size();i++){
+                if(folders.get(i).equals(chekck.getName())){
+                    if(chekck.listFiles().length-1 <= numOfFiles.get(i)){
+                        return true;
                     }
+                    else return false;
                 }
-
-            } catch (IOException e) {
-                System.out.println("config.json read error");
             }
+
+        } catch (IOException e) {
+            System.out.println("config.json read error");
         }
+
         return true;
     }
 

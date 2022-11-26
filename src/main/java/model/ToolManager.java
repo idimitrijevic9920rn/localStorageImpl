@@ -10,7 +10,7 @@ public class ToolManager {
 
     private String directory;
     private static final String downloads = "/Users/ilija/Downloads/downloads/downloads";
-    public static final String dirName = "/Users/ilija/Downloads/downloads/root";
+    public String dirName;
 
     private CreateImpl create;
     private DeleteImpl delete;
@@ -98,7 +98,6 @@ public class ToolManager {
     public ListFiles getListFiles() {
         return listFiles;
     }
-
 
     public InitializeDirecory getInitializeDirecory() {
         return initializeDirecory;

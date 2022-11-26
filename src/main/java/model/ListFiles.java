@@ -43,6 +43,8 @@ public class ListFiles {
 
         List<File> files = new ArrayList<>();
 
+
+
         File f = new File(ToolManager.getInstance().getDirectory() + "/" + str);
 
         try {
@@ -247,6 +249,20 @@ public class ListFiles {
         return files;
     }
 
+    public boolean checkIfFolderContains(String dir, List<String> values){
+
+        File folder = new File(ToolManager.getInstance().getDirectory() + "/" + dir);
+
+        File[] files = folder.listFiles();
+
+        for (File f : files) {
+            if(values.contains(f.getName())){
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 
 }

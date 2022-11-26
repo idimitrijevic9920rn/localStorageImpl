@@ -17,6 +17,7 @@ public class CreateConfigImpl {
 
     public void initialize(List<String> folders , List<Integer> numOfFiles, List<String> fileTypes, List<Integer> folderSizes){
 
+
         ObjectMapper mapper = ToolManager.getInstance().getObjectMapper();
         File file = new File(ToolManager.getInstance().getDirectory() + "/" + "config.json");
         System.out.printf(file.getAbsolutePath());
